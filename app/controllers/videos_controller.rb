@@ -1,6 +1,6 @@
 class VideosController < ApplicationController
   def index
-    @videos = Video.all
+    @categories = Category.all.order(:label)
   end
 
   def show
