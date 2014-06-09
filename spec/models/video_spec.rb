@@ -6,4 +6,8 @@ RSpec.describe Video, :type => :model do
     video.save
     expect(Video.first).to eq(video)
   end
+  
+  it "has a category" do
+    
+  end
 end
