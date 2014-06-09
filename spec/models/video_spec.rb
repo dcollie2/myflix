@@ -1,13 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Video, :type => :model do
-  it "saves itself" do
-    video = Video.new(title: "Shakes the Clown", description: "The horror. The horror.")
-    video.save
-    expect(Video.first).to eq(video)
-  end
-  
-  it "has a category" do
-    
-  end
+  it { should belong_to(:category)}
+  it { should validate_presence_of(:title)}
+  it { should validate_presence_of(:description)}  
 end
