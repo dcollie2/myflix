@@ -17,4 +17,6 @@ Category.create([{ label: 'Comedy'}, { label: 'Science Fiction'}, { label: 'Horr
   Video.create(title: 'Futurama', description: "This is a video about the future.", small_cover_url: "futurama.jpg", large_cover_url: "monk_large.jpg", category_id: 3)
   Video.create(title: 'Monk', description: "This is a video about a monk.", small_cover_url: "monk.jpg", large_cover_url: "monk_large.jpg", category_id: 3)
   Video.create(title: 'South Park', description: "This is a video about a park in the south.", small_cover_url: "south_park.jpg", large_cover_url: "monk_large.jpg", category_id: 3)
+  User.create([{ email: 'ralph@test.com', full_name: "Ralph Cramden", password: "test"}, { email: 'fred@test.com', full_name: "Fred Cramden", password: "test"}, { email: 'ed@test.com', full_name: "Ed Cramden", password: "test"}, ])
+  3.times do
 end
