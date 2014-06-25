@@ -57,7 +57,22 @@ RSpec.describe VideosController, :type => :controller do
         video = Fabricate(:video)
         get :show, id: video.id
         expect(assigns(:video)).to eq(video)
-      end        
+      end
+      
+      it "sets @reviews" do
+        video = Fabricate(:video)
+        reviews = Fabricate.times(4, :review, video: video)
+        get :show, id: video.id
+        expect(assigns(:reviews).count).to eq (4)
+      end
+      
+      it "only shows @video's reviews" do
+        video = Fabricate(:video)
+        reviews = Fabricate.times(4, :review, video: video)
+        another_review = Fabricate(:review)
+        get :show, id: video.id
+        expect(assigns(:reviews)).to match_array(reviews)
+      end
     end
 
   end
