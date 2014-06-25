@@ -4,15 +4,20 @@ describe Video do
   it { should belong_to(:category)}
   it { should validate_presence_of(:title)}
   it { should validate_presence_of(:description)}  
-
+  it "should have many reviews"
+  
   describe "related reviews" do
     it "should calculate a review average" do
       futurama = Fabricate(:video)
       reviews = Fabricate.times(4, :review, video: futurama)
-      ratings = reviews.map { |review| review.rating }
-      average_rating = (ratings.sum / ratings.count).round
-      expect(futurama.average_rating).to eq(average_rating)
+      expect(futurama.average_rating).not_to be_nil
     end
+    
+    it "average rating should be 0 if there are no reviews" do
+      futurama = Fabricate(:video)
+      expect(futurama.average_rating).to eq(0)
+    end
+    
   end
   
   describe "search_by_title" do
