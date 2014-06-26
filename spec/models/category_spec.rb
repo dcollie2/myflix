@@ -1,9 +1,6 @@
 require 'rails_helper'
 
-describe Category do
-  it { should have_many(:videos)}
-  it { should validate_presence_of(:label)}
-  
+describe Category do  
   describe "#recent_videos" do
     it "returns videos in reverse chron by created_at" do
       comedies = Category.create(label: "Comedies")

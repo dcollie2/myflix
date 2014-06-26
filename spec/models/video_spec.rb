@@ -1,11 +1,6 @@
 require 'rails_helper'
 
-describe Video do
-  it { should belong_to(:category)}
-  it { should validate_presence_of(:title)}
-  it { should validate_presence_of(:description)}  
-  it "should have many reviews"
-  
+describe Video do  
   describe "related reviews" do
     it "should calculate a review average" do
       futurama = Fabricate(:video)
