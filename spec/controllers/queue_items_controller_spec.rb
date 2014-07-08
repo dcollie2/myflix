@@ -17,4 +17,51 @@ describe QueueItemsController do
     end
     
   end
+  
+  describe "POST create" do
+    context "when logged-in" do
+      let(:current_user) { Fabricate(:user) }
+      before do
+        session[:user_id] = current_user.id 
+        @video = Fabricate(:video)
+      end
+      it "redirects to my_queue" do
+        post :create, video_id: @video.id
+        expect(response).to redirect_to my_queue_path
+      end
+      it "creates a queue item" do
+        post :create, video_id: @video.id
+        expect(QueueItem.count).to eq(1)
+      end
+      it "creates the queue item associated with the video" do
+        post :create, video_id: @video.id
+        expect(QueueItem.first.video).to eq(@video)
+      end
+      it "creates the queue item associated with the signed-in user" do
+        post :create, video_id: @video.id
+        expect(QueueItem.first.user).to eq(current_user)
+      end
+      it "should be the last item in the queue" do
+        first_video = Fabricate(:video)
+        Fabricate(:queue_item, video: first_video, user: current_user)
+        post :create, video_id: @video.id
+        just_posted_queue_item = QueueItem.where(video_id: @video.id, user_id: current_user.id).first
+        expect(just_posted_queue_item.position).to eq(2)
+      end
+      it "does not add the video if it's already in the queue" do
+        Fabricate(:queue_item, video: @video, user: current_user)
+        post :create, video_id: @video.id
+        video_survey = QueueItem.where(video_id: @video.id, user_id: current_user.id)
+        expect(video_survey.count).to eq(1)
+      end
+      
+    end
+    context "when not logged-in" do
+      it "redirects to the sign-in page for unauthenticated users" do
+        video = Fabricate(:video)
+        post :create, video_id: video.id
+        expect(response).to redirect_to sign_in_path
+      end
+    end
+  end
 end
