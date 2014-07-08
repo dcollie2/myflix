@@ -13,6 +13,7 @@ Myflix::Application.routes.draw do
   end
   
   resources :categories, only: [:show]
+  get 'my_queue', to: 'queue_items#index'
   get 'ui(/:action)', controller: 'ui'
 
   get 'register', to: "users#new"
