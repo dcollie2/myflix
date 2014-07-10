@@ -9,7 +9,7 @@ class Video < ActiveRecord::Base
     ratings = reviews.map { |review| review.rating }
     (ratings.sum / ratings.count.to_f).round rescue 0
   end
-  
+    
   def self.search_by_title(search_term)
     return [] if search_term.blank?
     where('title like ?', "%#{search_term}%").order("created_at DESC")
