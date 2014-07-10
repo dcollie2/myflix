@@ -87,7 +87,6 @@ describe QueueItemsController do
         delete :destroy, id: @queue_item.id
         expect(QueueItem.count).to eq(1)
       end
-      it "gives a removal message"
     end
     context "when not logged-in" do
       it "redirects to the sign-in page for unauthenticated users" do
