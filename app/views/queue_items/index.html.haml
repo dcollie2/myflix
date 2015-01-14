@@ -1,9 +1,10 @@
 %section.my_queue.container
   .row
-    .col-sm-10.col-sm-offset-1
+    .span10.offset1
       %article
         %header
           %h2 My Queue
+      = form_tag update_queue_path do
         %table.table
           %thead
             %tr
@@ -16,8 +17,9 @@
           %tbody
             - @queue_items.each do |queue_item|
               %tr
-                %td
-                  %input.form-control(type="text" value="#{queue_item.position}")
+                = hidden_field_tag "queue_items[][id]", queue_item.id
+                %td= text_field_tag "queue_items[][position]", queue_item.position
+
                 %td
                   = link_to queue_item.video_title, queue_item.video
                 %td
@@ -28,5 +30,5 @@
                 %td
                   = link_to queue_item, method: :delete do
                     %i.glyphicon.glyphicon-remove
-        = button_to "Update Instant Queue", nil, class: "btn btn-default"
+        = submit_tag "Update Instant Queue", class: "btn btn-default"
         
