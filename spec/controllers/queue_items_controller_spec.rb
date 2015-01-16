@@ -103,55 +103,41 @@ describe QueueItemsController do
   end
   describe 'POST update_queue' do
     context 'with valid inputs' do
+      let(:fred) { Fabricate(:user) }
+      let(:video) { Fabricate(:video) }
+      let(:queue_item_1) { Fabricate(:queue_item, user: fred, video: video, position: 1) }
+      let(:queue_item_2) { Fabricate(:queue_item, user: fred, video: video, position: 2) }
+      before { session[:user_id] = fred.id }
       it 'redirects to my_queue page' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2},{id: queue_item_2.id, position: 1}]
         expect(response).to redirect_to my_queue_path
       end
       it 'reorders the queue items' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2},{id: queue_item_2.id, position: 1}]
         expect(fred.queue_items).to eq([queue_item_2, queue_item_1])
 
       end
       it 'normalizes the position numbers' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 3},{id: queue_item_2.id, position: 1}]
         expect(fred.queue_items.map(&:position)).to eq([1, 2])
       end
 
     end
     context 'with invalid inputs' do
+      let(:fred) { Fabricate(:user) }
+      before { session[:user_id] = fred.id }
+      let(:video) { Fabricate(:video) }
+      let(:queue_item_1) { Fabricate(:queue_item, user: fred, video: video, position: 1) }
+      let(:queue_item_2) { Fabricate(:queue_item, user: fred, video: video, position: 2) }
       it 'redirects to the my queue page' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2.8},{id: queue_item_2.id, position: 1}]
         expect(response).to redirect_to my_queue_path
       end
       it 'sets the flash error message' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2.8},{id: queue_item_2.id, position: 1}]
         expect(flash[:error]).to be_present
       end
       it 'does not change the queue items' do
-        fred = Fabricate(:user)
-        session[:user_id] = fred.id
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: fred, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2},{id: queue_item_2.id, position: 1.3}]
         expect(queue_item_1.reload.position).to eq(1)
       end
@@ -167,8 +153,9 @@ describe QueueItemsController do
         fred = Fabricate(:user)
         session[:user_id] = fred.id
         bob = Fabricate(:user)
-        queue_item_1 = Fabricate(:queue_item, user: fred, position: 1)
-        queue_item_2 = Fabricate(:queue_item, user: bob, position: 2)
+        video = Fabricate(:video)
+        queue_item_1 = Fabricate(:queue_item, user: fred, video: video, position: 1)
+        queue_item_2 = Fabricate(:queue_item, user: bob, video: video, position: 2)
         post :update_queue, queue_items: [{id: queue_item_1.id, position: 2},{id: queue_item_2.id, position: 1.3}]
         expect(queue_item_1.reload.position).to eq(1)
       end
